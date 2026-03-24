@@ -1,0 +1,89 @@
+# Build release binaries when pushing a version tag (e.g. v1.0.0, v1.2.3).
+# Creates a GitHub Release with KiriksCFD-macos.zip, KiriksCFD-windows.zip, KiriksCFD-linux.zip.
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            suffix: macos
+          - os: windows-latest
+            suffix: windows
+          - os: ubuntu-latest
+            suffix: linux
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Linux dependencies (raylib / GLFW)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            libgl1-mesa-dev \
+            libx11-dev \
+            libxrandr-dev \
+            libxcursor-dev \
+            libxi-dev \
+            libxinerama-dev
+
+      - name: Configure & build
+        working-directory: fluid-exam-visualiser
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --config Release --parallel 4
+
+      - name: Package (macOS / Linux)
+        if: runner.os != 'Windows'
+        run: |
+          chmod +x fluid-exam-visualiser/build/KiriksCFD
+          zip -j "KiriksCFD-${{ matrix.suffix }}.zip" \
+            fluid-exam-visualiser/build/KiriksCFD \
+            README.md
+
+      - name: Package (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $b = "fluid-exam-visualiser/build"
+          $exe = if (Test-Path "$b/Release/KiriksCFD.exe") { "$b/Release/KiriksCFD.exe" }
+                 elseif (Test-Path "$b/KiriksCFD.exe") { "$b/KiriksCFD.exe" }
+                 else { throw "KiriksCFD.exe not found under fluid-exam-visualiser/build" }
+          Compress-Archive -LiteralPath $exe,"README.md" -DestinationPath "KiriksCFD-${{ matrix.suffix }}.zip" -Force
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bundle-${{ matrix.suffix }}
+          path: KiriksCFD-${{ matrix.suffix }}.zip
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          pattern: bundle-*
+          merge-multiple: true
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          generate_release_notes: true
+          files: release-assets/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

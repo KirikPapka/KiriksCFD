@@ -122,4 +122,4 @@ fluid-exam-visualiser/
 
 Look at licence section
 
-##Any mistakes/suggestions can be emailed to kp604@exeter.ac.uk
+## Any mistakes/suggestions can be emailed to kp604@exeter.ac.uk

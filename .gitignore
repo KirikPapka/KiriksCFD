@@ -1,0 +1,60 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# CMake / out-of-source builds
+**/build/
+**/out/
+**/cmake-build-*/
+**/CMakeFiles/
+**/CMakeCache.txt
+**/cmake_install.cmake
+**/CTestTestfile.cmake
+**/Makefile
+**/*.ninja
+.ninja_deps
+.ninja_log
+compile_commands.json
+
+# Compiled artifacts (if any appear outside build/)
+*.o
+*.obj
+*.exe
+*.out
+*.app
+*.dSYM/
+*.dylib
+*.dll
+*.so
+*.a
+*.lib
+*.pch
+
+# IDE / editors
+.idea/
+.vscode/
+*.code-workspace
+*.swp
+*~
+
+# ImGui saves window layout per machine
+fluid-exam-visualiser/imgui.ini
+
+# Python (if you add tooling later)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.env.*
+
+# Logs / temp
+*.log
+tmp/
+temp/

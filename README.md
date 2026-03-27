@@ -1,6 +1,8 @@
 # KiriksCFD — visualiser for Fluid Dynamics (MTH3007) and Theory of Weather and Climate (MTH3001) problems
 
 Small desktop app for revising canonical **fluid dynamics** and **geophysical fluid dynamics** problems. It is **not** a general CFD or Navier–Stokes solver: everything here is analytic or grid post-processing for pictures and intuition.
+<img width="1502" height="917" alt="Снимок экрана 2026-03-27 в 16 30 34" src="https://github.com/user-attachments/assets/fba26916-9ae8-4c9c-ba11-e9b82fc760ba" />
+<img width="1500" height="917" alt="Снимок экрана 2026-03-27 в 16 31 31" src="https://github.com/user-attachments/assets/0871b822-4898-4279-aa16-10387fad11c6" />
 
 ## Stack
 
@@ -26,18 +28,6 @@ cmake --build build -j
 
 **Windows:** Visual Studio 2019+ generator or Ninja; CMake will build raylib for you.
 
-### From GitHub
-
-The repository root is the parent folder that contains `fluid-exam-visualiser/` (see `.gitignore` there). After cloning:
-
-```bash
-cd fluid-exam-visualiser
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build -j
-./build/KiriksCFD
-```
-
-On **Windows**, use `build\Release\KiriksCFD.exe` or `build\KiriksCFD.exe` depending on the generator. GitHub Actions (`.github/workflows/ci.yml`) builds on Ubuntu, macOS, and Windows on each push to `main`/`master`.
 
 ## Controls
 
